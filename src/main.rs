@@ -1,69 +1,58 @@
+use crate::{math_nodes::AddNode, start_node::StartNode};
+use core::*;
 use std::{cell::RefCell, rc::Rc};
 
-pub trait GraphNode {
-    fn execute_node(&self);
-    fn next_node(&self) -> &Option<Rc<RefCell<dyn GraphNode>>>;
-}
+mod core;
+mod print_node;
+mod start_node;
 
-struct GraphNodePort<T> {
-    value: Option<T>,
-}
-
-struct StartNode {
-    next: Option<Rc<RefCell<dyn GraphNode>>>,
-}
-
-struct PrintNode {
-    input_value: GraphNodePort<String>,
-    next: Option<Rc<RefCell<dyn GraphNode>>>,
-}
-
-impl GraphNode for PrintNode {
-    fn execute_node(&self) {
-        if let Some(v) = &self.input_value.value {
-            println!("{}", v)
-        }
-    }
-
-    fn next_node(&self) -> &Option<Rc<RefCell<dyn GraphNode>>> {
-        return &self.next;
-    }
-}
-
-impl GraphNode for StartNode {
-    fn execute_node(&self) {}
-
-    fn next_node(&self) -> &Option<Rc<RefCell<dyn GraphNode>>> {
-        return &self.next;
-    }
-}
+mod math_nodes;
 
 fn main() {
-    let a = Rc::new(RefCell::new(StartNode { next: None }));
-    let b = Rc::new(RefCell::new(PrintNode {
-        input_value: GraphNodePort { value: None },
+    // Create nodes
+    let start_node = Rc::new(RefCell::new(StartNode { next: None }));
+    let b = Rc::new(RefCell::new(print_node::PrintNode {
+        input_value: core::GraphNodePort { value: None },
         next: None,
     }));
-    let c = Rc::new(RefCell::new(PrintNode {
-        input_value: GraphNodePort { value: None },
-        next: None,
-    }));
-    let d = Rc::new(RefCell::new(PrintNode {
-        input_value: GraphNodePort { value: None },
+    let c = Rc::new(RefCell::new(print_node::PrintNode {
+        input_value: core::GraphNodePort { value: None },
         next: None,
     }));
 
+    let d = Rc::new(RefCell::new(AddNode {
+        next: None,
+        input_a: GraphNodePort { value: None },
+        input_b: GraphNodePort { value: None },
+        output: GraphNodePort { value: None },
+    }));
+
+    // Set node values
     b.borrow_mut().input_value.value = Some(String::from("Hello World!"));
     c.borrow_mut().input_value.value = Some(String::from("Hello World Again!"));
-    d.borrow_mut().input_value.value = Some(String::from("Hello World Once More!"));
+    {
+        let mut d = d.borrow_mut();
+        d.input_a.value = Some(5);
+        d.input_b.value = Some(6)
+    }
 
-    a.borrow_mut().next = Some(b.clone());
+    // Wire nodes
+    start_node.borrow_mut().next = Some(b.clone());
     b.borrow_mut().next = Some(c.clone());
     c.borrow_mut().next = Some(d.clone());
+    // Run execution chain
+    run_execution_chain(start_node);
 
-    let mut current_node: Rc<RefCell<dyn GraphNode>> = a;
+    println!(
+        "The value of Add is {}",
+        d.borrow_mut().output.value.unwrap()
+    )
+}
+
+fn run_execution_chain(start_node: Rc<RefCell<StartNode>>) {
+    let mut current_node: Rc<RefCell<dyn GraphNode>> = start_node;
     loop {
-        current_node.borrow().execute_node();
+        current_node.borrow_mut().execute_node();
         let next = current_node.borrow().next_node().clone();
         match next {
             Some(next_node) => current_node = next_node,
