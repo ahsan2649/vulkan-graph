@@ -1,13 +1,12 @@
 [package]
-name = "vulkan-graph"
+name = "vk_triangle"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-
-[dependencies.uuid]
-version = "1.23.2"
-# Lets you generate random UUIDs
-features = [
-    "v4",
-]
+ash = { version = "0.37", features = ["linked"] }
+winit = { version = "0.29", features = ["rwh_05"] }
+raw-window-handle = "0.5"
+ash-window = "0.12"
