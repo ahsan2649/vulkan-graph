@@ -1,8 +1,3 @@
-use crate::{
-    node_definition::{NodeDefId, NodeDefinition, NodeKind},
-    port_definition::{PortDefId, PortDefinition, PortType},
-};
-
 mod eval_registry;
 mod node_definition;
 mod node_graph;
@@ -30,10 +25,10 @@ impl App {
     }
     fn init(&mut self) {
         // Register "Start" Node
-        self.node_registry.register_node(NodeDefinition {
-            id: NodeDefId("Start"),
+        self.node_registry.register_node(node_definition::NodeDefinition {
+            id: node_definition::NodeDefId("Start"),
             name: "Start".to_owned(),
-            kind: NodeKind::Exec,
+            kind: node_definition::NodeKind::Exec,
             input_ports: vec![],
             output_ports: vec![],
             exec_in_count: 0,
@@ -41,26 +36,26 @@ impl App {
         });
 
         // Register "Add" Node
-        self.node_registry.register_node(NodeDefinition {
-            id: NodeDefId("Add"),
+        self.node_registry.register_node(node_definition::NodeDefinition {
+            id: node_definition::NodeDefId("Add"),
             name: "Add".to_owned(),
-            kind: NodeKind::Exec,
+            kind: node_definition::NodeKind::Exec,
             input_ports: vec![
-                PortDefinition {
-                    id: PortDefId("i32"),
+                port_definition::PortDefinition {
+                    id: port_definition::PortDefId("i32"),
                     name: "A".to_owned(),
-                    port_type: PortType::UInt,
+                    port_type: port_definition::PortType::UInt,
                 },
-                PortDefinition {
-                    id: PortDefId("i32"),
+                port_definition::PortDefinition {
+                    id: port_definition::PortDefId("i32"),
                     name: "B".to_owned(),
-                    port_type: PortType::UInt,
+                    port_type: port_definition::PortType::UInt,
                 },
             ],
-            output_ports: vec![PortDefinition {
-                id: PortDefId("i32"),
+            output_ports: vec![port_definition::PortDefinition {
+                id: port_definition::PortDefId("i32"),
                 name: "Out".to_owned(),
-                port_type: PortType::UInt,
+                port_type: port_definition::PortType::UInt,
             }],
             exec_in_count: 1,
             exec_out_count: 1,
@@ -68,7 +63,7 @@ impl App {
 
         // Add "Start" Node to Graph
         self.node_graph
-            .add_node_by_def_id(&NodeDefId("Start"), &self.node_registry);
+            .add_node_by_def_id(&node_definition::NodeDefId("Start"), &self.node_registry);
     }
 }
 
