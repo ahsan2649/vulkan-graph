@@ -62,9 +62,9 @@ fn main() {
     add_node_instance.input_values[0].port_value = PortValue::Int(5);
     add_node_instance.input_values[1].port_value = PortValue::Int(5);
     let add_node_instance_id = add_node_instance.node_instance_id;
-    app.node_graph
-        .nodes
-        .insert(add_node_instance.node_instance_id, add_node_instance);
+
+    app.node_graph.insert(add_node_instance);
+
     let add_function = app
         .evaluation_registry
         .evaluation_definitions

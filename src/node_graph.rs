@@ -22,4 +22,9 @@ impl NodeGraph {
             exec_connections: ExecConnection(HashMap::new()),
         }
     }
+
+    pub fn insert(&mut self, node_instance: NodeInstance) {
+        self.nodes
+            .insert(node_instance.node_instance_id, node_instance);
+    }
 }
