@@ -44,7 +44,7 @@ impl PortInstance {
 pub struct NodeInstanceId(Uuid);
 
 pub struct NodeInstance {
-    node_definition_id: NodeDefinitionId,
+    pub node_definition_id: NodeDefinitionId,
     pub node_instance_id: NodeInstanceId,
     pub input_values: Vec<PortInstance>,
     pub output_values: Vec<PortInstance>,
