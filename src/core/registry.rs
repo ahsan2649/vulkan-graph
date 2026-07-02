@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, ops::Deref};
 
 use crate::core::{
     definition::{NodeDefinition, NodeDefinitionId},
@@ -18,6 +18,14 @@ impl NodeRegistry {
     pub fn register_node(&mut self, node_definition: NodeDefinition) {
         self.node_definitions
             .insert(node_definition.node_definition_id.clone(), node_definition);
+    }
+
+    pub fn find_by_name(&self, name: String) -> Option<(&NodeDefinitionId, &NodeDefinition)> {
+        let value = self
+            .node_definitions
+            .iter()
+            .find(|(_, value)| value.name == name);
+        return value;
     }
 }
 
