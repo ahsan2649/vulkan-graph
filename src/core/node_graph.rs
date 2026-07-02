@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::instance::{NodeInstance, NodeInstanceId, PortInstanceId};
+use crate::core::instance::{NodeInstance, NodeInstanceId, PortInstanceId};
 
 pub struct DataConnection(
     HashMap<(NodeInstanceId, PortInstanceId), (NodeInstanceId, PortInstanceId)>,

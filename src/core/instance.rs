@@ -1,4 +1,7 @@
-use crate::definition::{NodeDefinition, NodeDefinitionId, PortDefinition, PortType};
+use crate::core::definition::NodeDefinition;
+use crate::core::definition::NodeDefinitionId;
+use crate::core::definition::PortDefinition;
+use crate::core::definition::PortType;
 use uuid::Uuid;
 
 pub enum PortValue {

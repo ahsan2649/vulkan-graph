@@ -1,18 +1,16 @@
-mod definition;
-mod instance;
-mod node_graph;
-mod registry;
+mod core;
 
-use node_graph::NodeGraph;
-use registry::EvaluationRegistry;
-use registry::NodeRegistry;
+use core::node_graph::NodeGraph;
+use core::registry::EvaluationRegistry;
+use core::registry::NodeRegistry;
 
-use crate::definition::NodeDefinition;
-use crate::definition::NodeDefinitionId;
-use crate::definition::PortDefinition;
-use crate::instance::NodeInstance;
-use crate::instance::NodeInstanceId;
-use crate::instance::PortValue;
+use core::definition::NodeDefinition;
+use core::definition::NodeDefinitionId;
+use core::definition::PortDefinition;
+use core::definition::PortType;
+use core::instance::NodeInstance;
+use core::instance::NodeInstanceId;
+use core::instance::PortValue;
 
 struct App {
     node_graph: NodeGraph,
@@ -64,13 +62,10 @@ fn main() {
         NodeDefinition::new(
             "Add".to_owned(),
             vec![
-                PortDefinition::new("A".to_owned(), definition::PortType::Int),
-                PortDefinition::new("B".to_owned(), definition::PortType::Int),
+                PortDefinition::new("A".to_owned(), PortType::Int),
+                PortDefinition::new("B".to_owned(), PortType::Int),
             ],
-            vec![PortDefinition::new(
-                "Out".to_owned(),
-                definition::PortType::Int,
-            )],
+            vec![PortDefinition::new("Out".to_owned(), PortType::Int)],
         ),
         |node_instance| {
             let PortValue::Int(a) = &node_instance.input_values[0].port_value else {

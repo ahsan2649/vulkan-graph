@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::{
+use crate::core::{
     definition::{NodeDefinition, NodeDefinitionId},
     instance::NodeInstance,
 };
