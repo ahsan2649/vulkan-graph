@@ -23,14 +23,22 @@ impl App {
                 )],
             ),
             |node_instance| {
-                let PortValue::Int(a) = &node_instance.input_values[0].port_value else {
+                let a_id = node_instance.get_input_by_name("A".to_owned()).unwrap();
+                let b_id = node_instance.get_input_by_name("B".to_owned()).unwrap();
+                let output_id = node_instance.get_output_by_name("Out".to_owned()).unwrap();
+
+                let PortValue::Int(a) = &node_instance.input_values.get(&a_id).unwrap().port_value
+                else {
                     panic!("Unexpected Variant!");
                 };
-                let PortValue::Int(b) = &node_instance.input_values[1].port_value else {
+                let PortValue::Int(b) = &node_instance.input_values.get(&b_id).unwrap().port_value
+                else {
                     panic!("Unexpected Variant!");
                 };
 
-                node_instance.output_values[0].port_value = PortValue::Int(a + b);
+                let out = node_instance.output_values.get_mut(&output_id).unwrap();
+
+                out.port_value = PortValue::Int(a + b);
             },
         );
 
@@ -49,14 +57,22 @@ impl App {
                 )],
             ),
             |node_instance| {
-                let PortValue::Int(a) = &node_instance.input_values[0].port_value else {
+                let a_id = node_instance.get_input_by_name("A".to_owned()).unwrap();
+                let b_id = node_instance.get_input_by_name("B".to_owned()).unwrap();
+                let output_id = node_instance.get_output_by_name("Out".to_owned()).unwrap();
+
+                let PortValue::Int(a) = &node_instance.input_values.get(&a_id).unwrap().port_value
+                else {
                     panic!("Unexpected Variant!");
                 };
-                let PortValue::Int(b) = &node_instance.input_values[1].port_value else {
+                let PortValue::Int(b) = &node_instance.input_values.get(&b_id).unwrap().port_value
+                else {
                     panic!("Unexpected Variant!");
                 };
 
-                node_instance.output_values[0].port_value = PortValue::Int(a - b);
+                let out = node_instance.output_values.get_mut(&output_id).unwrap();
+
+                out.port_value = PortValue::Int(a - b);
             },
         );
 
@@ -75,14 +91,22 @@ impl App {
                 )],
             ),
             |node_instance| {
-                let PortValue::Int(a) = &node_instance.input_values[0].port_value else {
+                let a_id = node_instance.get_input_by_name("A".to_owned()).unwrap();
+                let b_id = node_instance.get_input_by_name("B".to_owned()).unwrap();
+                let output_id = node_instance.get_output_by_name("Out".to_owned()).unwrap();
+
+                let PortValue::Int(a) = &node_instance.input_values.get(&a_id).unwrap().port_value
+                else {
                     panic!("Unexpected Variant!");
                 };
-                let PortValue::Int(b) = &node_instance.input_values[1].port_value else {
+                let PortValue::Int(b) = &node_instance.input_values.get(&b_id).unwrap().port_value
+                else {
                     panic!("Unexpected Variant!");
                 };
 
-                node_instance.output_values[0].port_value = PortValue::Int(a * b);
+                let out = node_instance.output_values.get_mut(&output_id).unwrap();
+
+                out.port_value = PortValue::Int(a * b);
             },
         );
 
@@ -101,14 +125,22 @@ impl App {
                 )],
             ),
             |node_instance| {
-                let PortValue::Int(a) = &node_instance.input_values[0].port_value else {
+                let a_id = node_instance.get_input_by_name("A".to_owned()).unwrap();
+                let b_id = node_instance.get_input_by_name("B".to_owned()).unwrap();
+                let output_id = node_instance.get_output_by_name("Out".to_owned()).unwrap();
+
+                let PortValue::Int(a) = &node_instance.input_values.get(&a_id).unwrap().port_value
+                else {
                     panic!("Unexpected Variant!");
                 };
-                let PortValue::Int(b) = &node_instance.input_values[1].port_value else {
+                let PortValue::Int(b) = &node_instance.input_values.get(&b_id).unwrap().port_value
+                else {
                     panic!("Unexpected Variant!");
                 };
 
-                node_instance.output_values[0].port_value = PortValue::Int(a / b);
+                let out = node_instance.output_values.get_mut(&output_id).unwrap();
+
+                out.port_value = PortValue::Int(a / b);
             },
         );
     }
