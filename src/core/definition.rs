@@ -9,6 +9,7 @@ pub enum PortType {
     Int,
     Float,
     Bool,
+    Exec,
 }
 
 pub struct PortDefinition {
