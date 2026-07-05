@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::core::definition::NodeDefinition;
 use crate::core::definition::NodeDefinitionId;
 use crate::core::definition::PortDefinition;
@@ -10,6 +12,7 @@ pub enum PortValue {
     Int(i32),
     Float(f32),
     Bool(bool),
+    Exec,
 }
 
 impl From<&PortType> for PortValue {
@@ -19,6 +22,7 @@ impl From<&PortType> for PortValue {
             PortType::Int => Self::Int(0),
             PortType::Float => Self::Float(0.0),
             PortType::Bool => Self::Bool(true),
+            PortType::Exec => Self::Exec,
         }
     }
 }
@@ -52,8 +56,8 @@ pub struct NodeInstanceId(Uuid);
 pub struct NodeInstance {
     pub node_definition_id: NodeDefinitionId,
     pub node_instance_id: NodeInstanceId,
-    pub input_values: Vec<PortInstance>,
-    pub output_values: Vec<PortInstance>,
+    pub input_values: HashMap<PortInstanceId, PortInstance>,
+    pub output_values: HashMap<PortInstanceId, PortInstance>,
 }
 
 impl From<&NodeDefinition> for NodeInstance {
@@ -62,12 +66,18 @@ impl From<&NodeDefinition> for NodeInstance {
         let input_values = node_definition
             .input_ports
             .iter()
-            .map(|f| PortInstance::new(node_instance_id, f))
+            .map(|f| {
+                let port_instance = PortInstance::new(node_instance_id, f);
+                (port_instance.port_instance_id, port_instance)
+            })
             .collect();
         let output_values = node_definition
             .output_ports
             .iter()
-            .map(|f| PortInstance::new(node_instance_id, f))
+            .map(|f| {
+                let port_instance = PortInstance::new(node_instance_id, f);
+                (port_instance.port_instance_id, port_instance)
+            })
             .collect();
 
         Self {
@@ -75,6 +85,32 @@ impl From<&NodeDefinition> for NodeInstance {
             node_instance_id,
             input_values,
             output_values,
+        }
+    }
+}
+
+impl NodeInstance {
+    pub fn get_input_by_name(&self, name: String) -> Option<PortInstanceId> {
+        let input = self
+            .input_values
+            .iter()
+            .find(|(_, instance)| instance.name == name);
+
+        match input {
+            Some((id, _)) => Some(id.to_owned()),
+            None => None,
+        }
+    }
+
+    pub fn get_output_by_name(&self, name: String) -> Option<PortInstanceId> {
+        let input = self
+            .output_values
+            .iter()
+            .find(|(_, instance)| instance.name == name);
+
+        match input {
+            Some((id, _)) => Some(id.to_owned()),
+            None => None,
         }
     }
 }
