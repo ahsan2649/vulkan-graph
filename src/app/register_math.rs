@@ -22,7 +22,7 @@ impl App {
                     PortKind::Data,
                 )],
             ),
-            |node_instance| {
+            |node_instance, _| {
                 let a_id = node_instance.get_input_by_name("A".to_owned()).unwrap();
                 let b_id = node_instance.get_input_by_name("B".to_owned()).unwrap();
                 let output_id = node_instance.get_output_by_name("Out".to_owned()).unwrap();
@@ -56,7 +56,7 @@ impl App {
                     PortKind::Data,
                 )],
             ),
-            |node_instance| {
+            |node_instance, _| {
                 let a_id = node_instance.get_input_by_name("A".to_owned()).unwrap();
                 let b_id = node_instance.get_input_by_name("B".to_owned()).unwrap();
                 let output_id = node_instance.get_output_by_name("Out".to_owned()).unwrap();
@@ -90,7 +90,7 @@ impl App {
                     PortKind::Data,
                 )],
             ),
-            |node_instance| {
+            |node_instance, _| {
                 let a_id = node_instance.get_input_by_name("A".to_owned()).unwrap();
                 let b_id = node_instance.get_input_by_name("B".to_owned()).unwrap();
                 let output_id = node_instance.get_output_by_name("Out".to_owned()).unwrap();
@@ -124,7 +124,7 @@ impl App {
                     PortKind::Data,
                 )],
             ),
-            |node_instance| {
+            |node_instance, _| {
                 let a_id = node_instance.get_input_by_name("A".to_owned()).unwrap();
                 let b_id = node_instance.get_input_by_name("B".to_owned()).unwrap();
                 let output_id = node_instance.get_output_by_name("Out".to_owned()).unwrap();

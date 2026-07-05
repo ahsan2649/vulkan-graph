@@ -1,7 +1,10 @@
 pub mod register_math;
+pub mod register_variable;
+
+use std::collections::HashMap;
 
 use crate::core::{
-    definition::{NodeDefinition, NodeDefinitionId},
+    definition::{NodeDefinition, NodeDefinitionId, VariableDefinition, VariableDefinitionId},
     instance::{NodeInstance, NodeInstanceId},
     node_graph::NodeGraph,
     registry::{EvaluationRegistry, NodeRegistry},
@@ -9,6 +12,7 @@ use crate::core::{
 
 pub struct App {
     pub node_graph: NodeGraph,
+    pub variables: HashMap<VariableDefinitionId, VariableDefinition>,
     pub node_registy: NodeRegistry,
     pub evaluation_registry: EvaluationRegistry,
 }
@@ -17,6 +21,7 @@ impl App {
     pub fn new() -> Self {
         Self {
             node_graph: NodeGraph::new(),
+            variables: HashMap::new(),
             node_registy: NodeRegistry::new(),
             evaluation_registry: EvaluationRegistry::new(),
         }
@@ -25,7 +30,10 @@ impl App {
     pub fn register_function_node(
         &mut self,
         node_definition: NodeDefinition,
-        evaluation_definition: fn(&mut NodeInstance),
+        evaluation_definition: fn(
+            &mut NodeInstance,
+            &mut HashMap<VariableDefinitionId, VariableDefinition>,
+        ),
     ) -> NodeDefinitionId {
         let node_definition_id = node_definition.node_definition_id;
         self.node_registy.register_node(node_definition);

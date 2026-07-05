@@ -29,6 +29,8 @@ impl PortDefinition {
 
 use uuid::Uuid;
 
+use crate::core::instance::PortValue;
+
 pub enum NodeType {
     Function,
 }
@@ -59,4 +61,14 @@ impl NodeDefinition {
             output_ports,
         }
     }
+}
+
+#[derive(Hash, Eq, PartialEq, Debug, Clone, Copy)]
+pub struct VariableDefinitionId(Uuid);
+
+pub struct VariableDefinition {
+    pub name: String,
+    pub variable_definition_id: VariableDefinitionId,
+    pub variable_type: PortType,
+    pub variable_value: PortValue,
 }

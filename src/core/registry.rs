@@ -1,7 +1,7 @@
 use std::{collections::HashMap, ops::Deref};
 
 use crate::core::{
-    definition::{NodeDefinition, NodeDefinitionId},
+    definition::{NodeDefinition, NodeDefinitionId, VariableDefinition, VariableDefinitionId},
     instance::NodeInstance,
 };
 
@@ -33,7 +33,10 @@ impl NodeRegistry {
 }
 
 pub struct EvaluationRegistry {
-    pub evaluation_definitions: HashMap<NodeDefinitionId, fn(&mut NodeInstance)>,
+    pub evaluation_definitions: HashMap<
+        NodeDefinitionId,
+        fn(&mut NodeInstance, &mut HashMap<VariableDefinitionId, VariableDefinition>),
+    >,
 }
 
 impl EvaluationRegistry {
@@ -46,7 +49,10 @@ impl EvaluationRegistry {
     pub fn register_evaluation(
         &mut self,
         node_definition_id: NodeDefinitionId,
-        evaluation_definition: fn(&mut NodeInstance),
+        evaluation_definition: fn(
+            &mut NodeInstance,
+            &mut HashMap<VariableDefinitionId, VariableDefinition>,
+        ),
     ) {
         self.evaluation_definitions
             .insert(node_definition_id, evaluation_definition);
