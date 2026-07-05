@@ -20,12 +20,15 @@ impl NodeRegistry {
             .insert(node_definition.node_definition_id.clone(), node_definition);
     }
 
-    pub fn find_by_name(&self, name: String) -> Option<(&NodeDefinitionId, &NodeDefinition)> {
+    pub fn find_by_name(&self, name: String) -> Option<NodeDefinitionId> {
         let value = self
             .node_definitions
             .iter()
             .find(|(_, value)| value.name == name);
-        return value;
+        match value {
+            Some((node_definition, _)) => return Some(node_definition.to_owned()),
+            None => return None,
+        }
     }
 }
 
