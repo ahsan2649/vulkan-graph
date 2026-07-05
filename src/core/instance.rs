@@ -1,6 +1,7 @@
 use crate::core::definition::NodeDefinition;
 use crate::core::definition::NodeDefinitionId;
 use crate::core::definition::PortDefinition;
+use crate::core::definition::PortKind;
 use crate::core::definition::PortType;
 use uuid::Uuid;
 
@@ -26,9 +27,10 @@ impl From<&PortType> for PortValue {
 pub struct PortInstanceId(Uuid);
 
 pub struct PortInstance {
-    name: String,
-    node_instance_id: NodeInstanceId,
-    port_instance_id: PortInstanceId,
+    pub name: String,
+    pub port_kind: PortKind,
+    pub node_instance_id: NodeInstanceId,
+    pub port_instance_id: PortInstanceId,
     pub port_value: PortValue,
 }
 
@@ -36,6 +38,7 @@ impl PortInstance {
     pub fn new(node_instance_id: NodeInstanceId, port_definition: &PortDefinition) -> Self {
         Self {
             name: port_definition.name.clone(),
+            port_kind: port_definition.port_kind,
             node_instance_id: node_instance_id,
             port_instance_id: PortInstanceId(Uuid::new_v4()),
             port_value: PortValue::from(&port_definition.port_type),

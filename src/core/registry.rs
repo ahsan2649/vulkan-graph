@@ -26,7 +26,7 @@ impl NodeRegistry {
             .iter()
             .find(|(_, value)| value.name == name);
         match value {
-            Some((node_definition, _)) => return Some(node_definition.to_owned()),
+            Some((node_definition, _)) => return Some(node_definition.clone()),
             None => return None,
         }
     }

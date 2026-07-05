@@ -1,7 +1,7 @@
 use crate::{
     app::App,
     core::{
-        definition::{NodeDefinition, NodeType, PortDefinition, PortType},
+        definition::{NodeDefinition, NodeType, PortDefinition, PortKind, PortType},
         instance::PortValue,
     },
 };
@@ -13,10 +13,14 @@ impl App {
                 "Add".to_owned(),
                 NodeType::Function,
                 vec![
-                    PortDefinition::new("A".to_owned(), PortType::Int),
-                    PortDefinition::new("B".to_owned(), PortType::Int),
+                    PortDefinition::new("A".to_owned(), PortType::Int, PortKind::Data),
+                    PortDefinition::new("B".to_owned(), PortType::Int, PortKind::Data),
                 ],
-                vec![PortDefinition::new("Out".to_owned(), PortType::Int)],
+                vec![PortDefinition::new(
+                    "Out".to_owned(),
+                    PortType::Int,
+                    PortKind::Data,
+                )],
             ),
             |node_instance| {
                 let PortValue::Int(a) = &node_instance.input_values[0].port_value else {
@@ -35,10 +39,14 @@ impl App {
                 "Subtract".to_owned(),
                 NodeType::Function,
                 vec![
-                    PortDefinition::new("A".to_owned(), PortType::Int),
-                    PortDefinition::new("B".to_owned(), PortType::Int),
+                    PortDefinition::new("A".to_owned(), PortType::Int, PortKind::Data),
+                    PortDefinition::new("B".to_owned(), PortType::Int, PortKind::Data),
                 ],
-                vec![PortDefinition::new("Out".to_owned(), PortType::Int)],
+                vec![PortDefinition::new(
+                    "Out".to_owned(),
+                    PortType::Int,
+                    PortKind::Data,
+                )],
             ),
             |node_instance| {
                 let PortValue::Int(a) = &node_instance.input_values[0].port_value else {
@@ -57,10 +65,14 @@ impl App {
                 "Multiply".to_owned(),
                 NodeType::Function,
                 vec![
-                    PortDefinition::new("A".to_owned(), PortType::Int),
-                    PortDefinition::new("B".to_owned(), PortType::Int),
+                    PortDefinition::new("A".to_owned(), PortType::Int, PortKind::Data),
+                    PortDefinition::new("B".to_owned(), PortType::Int, PortKind::Data),
                 ],
-                vec![PortDefinition::new("Out".to_owned(), PortType::Int)],
+                vec![PortDefinition::new(
+                    "Out".to_owned(),
+                    PortType::Int,
+                    PortKind::Data,
+                )],
             ),
             |node_instance| {
                 let PortValue::Int(a) = &node_instance.input_values[0].port_value else {
@@ -79,10 +91,14 @@ impl App {
                 "Divide".to_owned(),
                 NodeType::Function,
                 vec![
-                    PortDefinition::new("A".to_owned(), PortType::Int),
-                    PortDefinition::new("B".to_owned(), PortType::Int),
+                    PortDefinition::new("A".to_owned(), PortType::Int, PortKind::Data),
+                    PortDefinition::new("B".to_owned(), PortType::Int, PortKind::Data),
                 ],
-                vec![PortDefinition::new("Out".to_owned(), PortType::Int)],
+                vec![PortDefinition::new(
+                    "Out".to_owned(),
+                    PortType::Int,
+                    PortKind::Data,
+                )],
             ),
             |node_instance| {
                 let PortValue::Int(a) = &node_instance.input_values[0].port_value else {

@@ -1,3 +1,9 @@
+#[derive(Eq, PartialEq, Debug, Clone, Copy)]
+pub enum PortKind {
+    Exec,
+    Data,
+}
+
 pub enum PortType {
     String,
     Int,
@@ -7,11 +13,16 @@ pub enum PortType {
 
 pub struct PortDefinition {
     pub name: String,
+    pub port_kind: PortKind,
     pub port_type: PortType,
 }
 impl PortDefinition {
-    pub fn new(name: String, port_type: PortType) -> Self {
-        Self { name, port_type }
+    pub fn new(name: String, port_type: PortType, port_kind: PortKind) -> Self {
+        Self {
+            name,
+            port_kind,
+            port_type,
+        }
     }
 }
 
