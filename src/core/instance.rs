@@ -54,6 +54,7 @@ impl PortInstance {
 pub struct NodeInstanceId(Uuid);
 
 pub struct NodeInstance {
+    pub name: String,
     pub node_definition_id: NodeDefinitionId,
     pub node_instance_id: NodeInstanceId,
     pub input_values: HashMap<PortInstanceId, PortInstance>,
@@ -81,6 +82,7 @@ impl From<&NodeDefinition> for NodeInstance {
             .collect();
 
         Self {
+            name: node_definition.name.clone(),
             node_definition_id: node_definition.node_definition_id,
             node_instance_id,
             input_values,
