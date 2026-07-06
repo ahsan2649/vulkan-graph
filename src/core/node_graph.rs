@@ -1,6 +1,11 @@
-use std::collections::HashMap;
+use std::{borrow::Cow, collections::HashMap};
 
-use crate::core::instance::{NodeInstance, NodeInstanceId, PortInstance, PortInstanceId};
+use egui_node_graph2::DataTypeTrait;
+
+use crate::core::{
+    definition::PortType,
+    instance::{NodeInstance, NodeInstanceId, PortInstance, PortInstanceId},
+};
 
 pub struct DataConnection(
     HashMap<(NodeInstanceId, PortInstanceId), (NodeInstanceId, PortInstanceId)>,
@@ -14,6 +19,29 @@ pub struct NodeGraph {
     pub data_connections: DataConnection,
     pub exec_connections: ExecConnection,
 }
+
+impl DataTypeTrait<NodeGraph> for PortType {
+    fn data_type_color(&self, user_state: &mut NodeGraph) -> egui::Color32 {
+        match self {
+            PortType::String => egui::Color32::from_rgb(38, 109, 211),
+            PortType::Int => egui::Color32::from_rgb(38, 109, 211),
+            PortType::Float => egui::Color32::from_rgb(38, 109, 211),
+            PortType::Bool => egui::Color32::from_rgb(38, 109, 211),
+            PortType::Exec => egui::Color32::from_rgb(38, 109, 211),
+        }
+    }
+
+    fn name(&self) -> std::borrow::Cow<str> {
+        match self {
+            PortType::String => Cow::Borrowed("String"),
+            PortType::Int => Cow::Borrowed("Int"),
+            PortType::Float => Cow::Borrowed("Float"),
+            PortType::Bool => Cow::Borrowed("Bool"),
+            PortType::Exec => Cow::Borrowed("Exec"),
+        }
+    }
+}
+
 impl NodeGraph {
     pub fn new() -> Self {
         Self {

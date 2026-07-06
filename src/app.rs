@@ -3,9 +3,11 @@ pub mod register_variable;
 
 use std::collections::HashMap;
 
+use egui_node_graph2::NodeResponse;
+
 use crate::core::{
     definition::{NodeDefinition, NodeDefinitionId, VariableDefinition, VariableDefinitionId},
-    instance::{NodeInstance, NodeInstanceId},
+    instance::{MyEditorState, MyResponse, NodeInstance, NodeInstanceId},
     node_graph::NodeGraph,
     registry::{EvaluationRegistry, NodeRegistry},
 };
@@ -15,6 +17,8 @@ pub struct App {
     pub variables: HashMap<VariableDefinitionId, VariableDefinition>,
     pub node_registy: NodeRegistry,
     pub evaluation_registry: EvaluationRegistry,
+
+    pub state: MyEditorState,
 }
 
 impl App {
@@ -24,6 +28,7 @@ impl App {
             variables: HashMap::new(),
             node_registy: NodeRegistry::new(),
             evaluation_registry: EvaluationRegistry::new(),
+            state: MyEditorState::new(100.0),
         }
     }
 
@@ -55,5 +60,26 @@ impl App {
         self.node_graph.insert(node_instance);
 
         return node_instance_id;
+    }
+}
+
+impl eframe::App for App {
+    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+        egui::TopBottomPanel::top("top").show(ctx, |ui| {
+            egui::menu::bar(ui, |ui| {
+                egui::widgets::global_dark_light_mode_switch(ui);
+            });
+        });
+
+        let graph_response = egui::CentralPanel::default()
+            .show(ctx, |ui| {
+                self.state.draw_graph_editor(
+                    ui,
+                    self.node_registy.clone(),
+                    &mut self.node_graph,
+                    Vec::default(),
+                )
+            })
+            .inner;
     }
 }

@@ -4,6 +4,7 @@ pub enum PortKind {
     Data,
 }
 
+#[derive(Clone, Eq, PartialEq, Copy)]
 pub enum PortType {
     String,
     Int,
@@ -12,6 +13,7 @@ pub enum PortType {
     Exec,
 }
 
+#[derive(Clone)]
 pub struct PortDefinition {
     pub name: String,
     pub port_kind: PortKind,
@@ -27,10 +29,18 @@ impl PortDefinition {
     }
 }
 
+use std::borrow::Cow;
+
+use egui_node_graph2::{NodeTemplateIter, NodeTemplateTrait};
 use uuid::Uuid;
 
-use crate::core::instance::PortValue;
+use crate::core::{
+    instance::{NodeInstance, PortValue},
+    node_graph::NodeGraph,
+    registry::NodeRegistry,
+};
 
+#[derive(Clone)]
 pub enum NodeType {
     Function,
 }
@@ -38,6 +48,7 @@ pub enum NodeType {
 #[derive(Hash, Eq, PartialEq, Debug, Clone, Copy)]
 pub struct NodeDefinitionId(Uuid);
 
+#[derive(Clone)]
 pub struct NodeDefinition {
     pub name: String,
     pub node_type: NodeType,
@@ -63,6 +74,51 @@ impl NodeDefinition {
     }
 }
 
+impl NodeTemplateTrait for NodeDefinition {
+    type NodeData = NodeInstance;
+
+    type DataType = PortType;
+
+    type ValueType = PortValue;
+
+    type UserState = NodeGraph;
+
+    type CategoryType = &'static str;
+
+    fn node_finder_label(&self, user_state: &mut Self::UserState) -> std::borrow::Cow<str> {
+        Cow::Borrowed(self.name.as_str())
+    }
+
+    fn node_graph_label(&self, user_state: &mut Self::UserState) -> String {
+        self.node_finder_label(user_state).into()
+    }
+
+    fn user_data(&self, user_state: &mut Self::UserState) -> Self::NodeData {
+        NodeInstance::from(self)
+    }
+
+    fn build_node(
+        &self,
+        graph: &mut egui_node_graph2::Graph<Self::NodeData, Self::DataType, Self::ValueType>,
+        user_state: &mut Self::UserState,
+        node_id: egui_node_graph2::NodeId,
+    ) {
+        self.input_ports.iter().for_each(|port| {
+            graph.add_input_param(
+                node_id,
+                port.name.clone(),
+                port.port_type,
+                PortValue::from(&port.port_type),
+                egui_node_graph2::InputParamKind::ConnectionOnly,
+                true,
+            );
+        });
+        self.output_ports.iter().for_each(|port| {
+            graph.add_output_param(node_id, port.name.clone(), port.port_type);
+        });
+    }
+}
+
 #[derive(Hash, Eq, PartialEq, Debug, Clone, Copy)]
 pub struct VariableDefinitionId(Uuid);
 
@@ -71,4 +127,16 @@ pub struct VariableDefinition {
     pub variable_definition_id: VariableDefinitionId,
     pub variable_type: PortType,
     pub variable_value: PortValue,
+}
+
+impl NodeTemplateIter for NodeRegistry {
+    type Item = NodeDefinition;
+
+    fn all_kinds(&self) -> Vec<Self::Item> {
+        self.node_definitions
+            .values()
+            .cloned()
+            .map(|item| item)
+            .collect()
+    }
 }

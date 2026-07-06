@@ -5,6 +5,7 @@ use crate::core::{
     instance::NodeInstance,
 };
 
+#[derive(Clone)]
 pub struct NodeRegistry {
     pub node_definitions: HashMap<NodeDefinitionId, NodeDefinition>,
 }
