@@ -1,9 +1,12 @@
 use std::borrow::Cow;
 
-use egui_node_graph2::{DataTypeTrait, NodeId, NodeTemplateTrait};
+use egui_node_graph2::{DataTypeTrait, InputParamKind, NodeId, NodeTemplateTrait};
 use uuid::Uuid;
 
-use crate::{GraphState, NodeInstance, PortInstance};
+use crate::{
+    GraphState,
+    instance::{NodeInstance, PortInstance},
+};
 
 pub type NodeDefinitionId = Uuid;
 
@@ -14,12 +17,30 @@ pub enum PortType {
     Float,
     Bool,
     Exec,
+    VkCreateInfo,
+    VkInstance,
+    VkStructureType,
+    VkApplicationInfo,
+    VkPhysicalDevice,
+    VecVkPhysicalDevice,
 }
 
 #[derive(Eq, Clone)]
 pub struct PortDefinition {
     pub name: String,
     pub port_type: PortType,
+}
+
+impl PortDefinition {
+    pub fn new(name: String, port_type: PortType) -> Self {
+        Self { name, port_type }
+    }
+    pub fn exec() -> Self {
+        Self {
+            name: "".to_owned(),
+            port_type: PortType::Exec,
+        }
+    }
 }
 
 impl PartialEq for PortDefinition {
@@ -36,6 +57,12 @@ impl DataTypeTrait<GraphState> for PortDefinition {
             PortType::Float => egui::Color32::from_rgb(38, 109, 211),
             PortType::Bool => egui::Color32::from_rgb(38, 109, 211),
             PortType::Exec => egui::Color32::from_rgb(255, 255, 255),
+            PortType::VkCreateInfo => egui::Color32::from_rgb(109, 38, 211),
+            PortType::VkInstance => egui::Color32::from_rgb(211, 38, 211),
+            PortType::VkStructureType => egui::Color32::from_rgb(100, 50, 211),
+            PortType::VkApplicationInfo => egui::Color32::from_rgb(123, 45, 67),
+            PortType::VkPhysicalDevice => egui::Color32::from_rgb(89, 101, 112),
+            PortType::VecVkPhysicalDevice => egui::Color32::from_rgb(131, 41, 51),
         }
     }
 

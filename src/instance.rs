@@ -1,9 +1,11 @@
-use egui::DragValue;
+use ash::vk::{PhysicalDevice, StructureType};
+use egui::{DragValue, accesskit::Role::ComboBox};
 use egui_node_graph2::{Graph, NodeDataTrait, NodeId, UserResponseTrait, WidgetValueTrait};
 
 use crate::{
     GraphState, UserResponse,
     definition::{NodeDefinitionId, PortDefinition, PortType},
+    instance::PortValue::{VkApplicationInfo, VkStructureType},
 };
 
 pub struct NodeInstance {
@@ -67,6 +69,12 @@ pub enum PortValue {
     Float(f32),
     Bool(bool),
     None,
+    VkCreateInfo,
+    VkInstance,
+    VkStructureType(StructureType),
+    VkApplicationInfo,
+    VkPhysicalDevice,
+    VecVkPhysicalDevice(Vec<PhysicalDevice>),
 }
 
 pub struct PortInstance {
@@ -84,6 +92,12 @@ impl From<&PortDefinition> for PortInstance {
                 PortType::Float => PortValue::Float(0.0),
                 PortType::Bool => PortValue::Bool(false),
                 PortType::Exec => PortValue::None,
+                PortType::VkCreateInfo => PortValue::VkCreateInfo,
+                PortType::VkInstance => PortValue::VkInstance,
+                PortType::VkStructureType => PortValue::VkStructureType(StructureType::default()),
+                PortType::VkApplicationInfo => PortValue::VkApplicationInfo,
+                PortType::VkPhysicalDevice => PortValue::VkPhysicalDevice,
+                PortType::VecVkPhysicalDevice => PortValue::VecVkPhysicalDevice(vec![]),
             },
         }
     }
@@ -111,24 +125,42 @@ impl WidgetValueTrait for PortInstance {
         user_state: &mut Self::UserState,
         node_data: &Self::NodeData,
     ) -> Vec<Self::Response> {
+        ui.label(self.name.to_owned());
         match &mut self.port_value {
             PortValue::String(value) => {
-                ui.label(self.name.to_owned());
                 ui.text_edit_singleline(value);
             }
             PortValue::Int(value) => {
-                ui.label(self.name.to_owned());
                 ui.add(DragValue::new(value));
             }
             PortValue::Float(value) => {
-                ui.label(self.name.to_owned());
                 ui.add(DragValue::new(value));
             }
             PortValue::Bool(value) => {
-                ui.label(self.name.to_owned());
                 ui.checkbox(value, "");
             }
-            PortValue::None => {}
+            PortValue::VkStructureType(value) => {
+                egui::ComboBox::from_label("")
+                    .selected_text(format!("{:?}", value))
+                    .show_ui(ui, |ui| {
+                        ui.selectable_value(
+                            value,
+                            StructureType::INSTANCE_CREATE_INFO,
+                            "Instance Create Info",
+                        );
+                        ui.selectable_value(
+                            value,
+                            StructureType::DEVICE_CREATE_INFO,
+                            "Device Create Info",
+                        );
+                        ui.selectable_value(
+                            value,
+                            StructureType::APPLICATION_INFO,
+                            "Application Info",
+                        );
+                    });
+            }
+            _ => {}
         }
         Vec::new()
     }

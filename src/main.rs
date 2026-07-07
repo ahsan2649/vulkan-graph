@@ -6,11 +6,7 @@ mod registry;
 use egui::Visuals;
 use egui_node_graph2::{NodeId, UserResponseTrait};
 
-use crate::{
-    app::App,
-    definition::{NodeDefinition, PortDefinition},
-    instance::{NodeInstance, PortInstance},
-};
+use crate::app::App;
 
 #[derive(Debug, Clone)]
 pub enum UserResponse {
@@ -26,6 +22,8 @@ impl UserResponseTrait for UserResponse {}
 
 fn main() {
     let mut app = App::default();
+
+    app.register_vulkan_nodes();
 
     eframe::run_native(
         "Vulkan-Graph",

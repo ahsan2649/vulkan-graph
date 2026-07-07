@@ -1,17 +1,24 @@
+mod vulkan;
+
 use std::collections::HashMap;
 
+use ash::Entry;
 use egui_node_graph2::{Graph, GraphEditorState, NodeResponse};
 
-use crate::{
-    GraphState, NodeDefinition, NodeInstance, PortInstance, UserResponse,
-    definition::PortDefinition, registry::NodeRegistry,
-};
+use crate::GraphState;
+use crate::UserResponse;
+use crate::definition::NodeDefinition;
+use crate::definition::PortDefinition;
+use crate::instance::NodeInstance;
+use crate::instance::PortInstance;
+use crate::registry::NodeRegistry;
 
 pub type NodeGraph = Graph<NodeInstance, PortDefinition, PortInstance>;
 pub type EditorState =
     GraphEditorState<NodeInstance, PortDefinition, PortInstance, NodeDefinition, GraphState>;
 
 pub struct App {
+    pub vulkan_entry: Entry,
     pub state: EditorState,
     pub user_state: GraphState,
     pub node_registry: NodeRegistry,
@@ -20,6 +27,7 @@ pub struct App {
 impl Default for App {
     fn default() -> Self {
         Self {
+            vulkan_entry: Entry::linked(),
             state: EditorState::default(),
             user_state: GraphState { active_node: None },
             node_registry: NodeRegistry {
